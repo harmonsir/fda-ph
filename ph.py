@@ -11,10 +11,6 @@ class FDA_PH(object):
         session.headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) " \
                                         "Gecko/20100101 Firefox/115.0"
 
-        session.proxies = {
-            "http": "socks5h://10.2.0.22:31026",
-            "https": "socks5h://10.2.0.22:31026"
-        }
         self.session = session
 
         self.base_dir = "data/ph"
