@@ -35,7 +35,8 @@ jobs:
         run: |
           python ph.py > ph_data.json
           mkdir -p tmp
-          cp -r ph_data.json data tmp
+          cp -r data tmp
+          cp ph_data.json tmp
 
       - uses: actions/checkout@v3
         with:
@@ -46,7 +47,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           mv tmp/ph_data.json data .
-          git add ph_data.json
-          git add data/*
+          git add -f ph_data.json
+          git add -f data/*
           git commit -m "$(date +%Y%m%d%H%M)"
           git push -f -u origin release
