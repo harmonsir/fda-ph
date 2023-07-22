@@ -11,7 +11,15 @@ class FDA_PH(object):
         session.headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) " \
                                         "Gecko/20100101 Firefox/115.0"
 
+        session.proxies = {
+            "http": "socks5h://10.2.0.22:31026",
+            "https": "socks5h://10.2.0.22:31026"
+        }
         self.session = session
+
+        self.base_dir = "data/ph"
+        if not os.path.exists(self.base_dir):
+            os.makedirs(self.base_dir)
 
     def request(self):
         uri = "https://www.fda.gov.ph/wp-admin/admin-ajax.php"
@@ -59,13 +67,13 @@ class FDA_PH(object):
         return response.text
 
     def get_detail(self, uri, name):
-        base_dir = "data/ph"
-        if not os.path.exists(base_dir):
-            os.makedirs(base_dir)
-
         r = self.session.get(uri)
-        with open(f"{base_dir}/{name}.html", "w") as wf:
-            wf.write(r.text)
+        r.raise_for_status()
+        self.save_detail(name, r.text)
+
+    def save_detail(self, name, content):
+        with open(f"{self.base_dir}/{name}.html", "w", encoding="utf-8") as wf:
+            wf.write(content)
 
 
 if __name__ == '__main__':
