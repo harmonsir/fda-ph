@@ -43,12 +43,18 @@ jobs:
           ref: release
           clean: false
       - name: Git push assets to "release" branch
+        shell: bash
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           mv tmp/ph_data.json .
           cp --force --archive --update --link tmp/data .
           rm -rf tmp
-          git add -f ph_data.json data/*
-          git commit -m "$(date +%Y%m%d%H%M)"
-          git push -f -u origin release
+          git add ph_data.json data/*
+          
+          if [[ `git status --porcelain` ]]; then
+            git commit -m "$(date +%Y%m%d%H%M)"
+            git push -f -u origin release
+          else
+            echo "WARNING: No changes were detected."
+          fi
